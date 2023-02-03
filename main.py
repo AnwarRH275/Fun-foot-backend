@@ -7,12 +7,16 @@ from flask_migrate import Migrate
 from flask_jwt_extended import JWTManager
 from services.auth.auth import auth_ns
 from services.crud.manage import recipie_ns
+from services.game.category import category_ns
+from services.game.match import match_ns
+from config import DevConfig
 
 
-def create_app(config):
+def create_app(config=DevConfig):
     app = Flask(__name__)
     app.config.from_object(config)
     CORS(app)
+    app.config['JWT_ACCESS_TOKEN_EXPIRES'] = False
     JWTManager(app)
     db.init_app(app)
 
@@ -21,7 +25,7 @@ def create_app(config):
     Create Migration repository
     $ flask db init 
     Apply Frist Migration
-    $ flask db migrate  -m "add user table"
+    $ flask db migrate  -m "add table"
     Apply current revision db 'commit'
     $ flask db upgrade
     '''
@@ -30,6 +34,8 @@ def create_app(config):
 
     api.add_namespace(auth_ns)
     api.add_namespace(recipie_ns)
+    api.add_namespace(category_ns)
+    api.add_namespace(match_ns)
 
     '''
     Acces to SHELL FLASK
