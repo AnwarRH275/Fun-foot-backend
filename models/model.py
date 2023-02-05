@@ -84,6 +84,7 @@ class Category(db.Model):
 
 class Match(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    numero_match = db.Column(db.String(100), default='N/A', nullable=False)
     username = db.Column(db.String(100), nullable=False)
     categorie_match = db.Column(db.String(100), nullable=False)
     equipe1 = db.Column(db.String(100), nullable=False)
@@ -99,11 +100,43 @@ class Match(db.Model):
         db.session.delete(self)
         db.session.commit()
 
-    def update(self, categorie_match, equipe1, equipe2, resultat):
+    def update(self, categorie_match, equipe1, equipe2, resultat, numero_match):
 
         self.categorie_match = categorie_match
         self.equipe1 = equipe1
         self.equipe2 = equipe2
         self.resultat = resultat
+        self.numero_match = numero_match
+        db.session.commit()
+
+
+class MesGrid(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    numero_match = db.Column(db.String(100), default='N/A', nullable=True)
+    username = db.Column(db.String(100), nullable=False)
+    categorie_match = db.Column(db.String(100), nullable=False)
+    equipe1 = db.Column(db.String(100), nullable=False)
+    equipe2 = db.Column(db.String(100), nullable=False)
+    resultat = db.Column(db.String(100), nullable=True)
+    etat = db.Column(db.String(100), nullable=True)
+    date_fin = db.Column(db.String(100), nullable=True)
+    correct_resultat = db.Column(db.String(100), nullable=True)
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def delete(self):
+
+        db.session.delete(self)
+        db.session.commit()
+
+    def update(self, categorie_match, equipe1, equipe2, resultat, numero_match):
+
+        self.categorie_match = categorie_match
+        self.equipe1 = equipe1
+        self.equipe2 = equipe2
+        self.resultat = resultat
+        self.numero_match = numero_match
 
         db.session.commit()

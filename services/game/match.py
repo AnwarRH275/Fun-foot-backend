@@ -5,7 +5,7 @@ from models.model import Match
 from models.exts import db
 
 
-match_ns = Namespace('match', description='namespaces categorie match ')
+match_ns = Namespace('match', description='namespaces match ')
 
 '''
 id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -22,6 +22,7 @@ match_model = match_ns.model(
     "Match",
     {
         "id": fields.Integer(),
+        "numero_match": fields.String(),
         "username": fields.String(),
         "categorie_match": fields.String(),
         "equipe1": fields.String(),
@@ -31,15 +32,30 @@ match_model = match_ns.model(
 )
 
 
+@match_ns.route("/matchs/<string:categorie_match>")
+class matchsByCategoryRessource(Resource):
+
+    @match_ns.marshal_list_with(match_model)
+    @jwt_required()
+    def get(self, categorie_match):
+        print(categorie_match)
+        '''Get all matches in categorie_match'''
+        matches = Match.query.filter_by(
+            categorie_match=categorie_match, username='admin').all()
+
+        return matches
+
+
 @match_ns.route("/matchs")
-class categoryRessource(Resource):
+class matchsRessource(Resource):
 
     @match_ns.marshal_list_with(match_model)
     @jwt_required()
     def get(self):
-        '''Get all Category'''
-        recipies = Match.query.all()
-        return recipies
+        '''Get all '''
+        matchs = Match.query.all()
+
+        return matchs
 
     @match_ns.marshal_with(match_model)
     @match_ns.expect(match_model)
@@ -48,6 +64,7 @@ class categoryRessource(Resource):
         '''Create new Category'''
         data = request.get_json()
         new_match = Match(
+            numero_match=data.get('numero_match'),
             username=data.get('username'),
             categorie_match=data.get('categorie_match'),
             equipe1=data.get('equipe1'),
@@ -59,14 +76,13 @@ class categoryRessource(Resource):
 
 
 @match_ns.route("/match/<int:id>")
-class RecipieRessource(Resource):
+class matchsRessource(Resource):
 
     @match_ns.marshal_with(match_model)
     @jwt_required()
     def get(self, id):
-        '''Get by id Recipie'''
+        ''' Get by id '''
         match = Match.query.get_or_404(id)
-
         return match
 
     @match_ns.marshal_with(match_model)
@@ -91,7 +107,7 @@ class RecipieRessource(Resource):
     @match_ns.marshal_with(match_model)
     @jwt_required()
     def delete(self, id):
-        '''delete recipie'''
+        '''delete match'''
         category_to_delete = Match.query.get_or_404(id)
         category_to_delete.delete()
         return category_to_delete

@@ -9,6 +9,7 @@ from services.auth.auth import auth_ns
 from services.crud.manage import recipie_ns
 from services.game.category import category_ns
 from services.game.match import match_ns
+from services.game.mesgrid import mesgrid_ns
 from config import DevConfig
 
 
@@ -36,6 +37,7 @@ def create_app(config=DevConfig):
     api.add_namespace(recipie_ns)
     api.add_namespace(category_ns)
     api.add_namespace(match_ns)
+    api.add_namespace(mesgrid_ns)
 
     '''
     Acces to SHELL FLASK
