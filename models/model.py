@@ -89,7 +89,7 @@ class Match(db.Model):
     categorie_match = db.Column(db.String(100), nullable=False)
     equipe1 = db.Column(db.String(100), nullable=False)
     equipe2 = db.Column(db.String(100), nullable=False)
-    resultat = db.Column(db.String(100), nullable=False)
+    resultat = db.Column(db.String(100), nullable=True)
 
     def save(self):
         db.session.add(self)
@@ -121,6 +121,7 @@ class MesGrid(db.Model):
     etat = db.Column(db.String(100), nullable=True)
     date_fin = db.Column(db.String(100), nullable=True)
     correct_resultat = db.Column(db.String(100), nullable=True)
+    numero_grid = db.Column(db.Integer, nullable=True, default=0)
 
     def save(self):
         db.session.add(self)
@@ -138,5 +139,50 @@ class MesGrid(db.Model):
         self.equipe2 = equipe2
         self.resultat = resultat
         self.numero_match = numero_match
+
+        db.session.commit()
+
+
+class Scores(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+
+    username = db.Column(db.String(100), nullable=True)
+    scores = db.Column(db.Integer, default=0, nullable=False)
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def delete(self):
+
+        db.session.delete(self)
+        db.session.commit()
+
+    def update(self, scores):
+
+        self.scores = scores
+
+        db.session.commit()
+
+class Coupons(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+
+    username = db.Column(db.String(100), nullable=True)
+    coupons = db.Column(db.String(100), nullable=False)
+    nombre_de_pieces = db.Column(db.Integer, default=10, nullable=False)
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def delete(self):
+
+        db.session.delete(self)
+        db.session.commit()
+
+    def update(self, coupons,nombre_de_pieces):
+
+        self.coupons = coupons
+        self.nombre_de_pieces = nombre_de_pieces
 
         db.session.commit()
